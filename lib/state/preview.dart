@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/logger.dart';
 import '../data/office_converter.dart';
 import '../domain/doc_file.dart';
 import 'providers.dart';
@@ -66,6 +67,7 @@ Future<PreviewSpec> loadPreview(DocFile f, OfficeConverter converter) async {
   if (isOfficeExt(ext)) {
     final r = await converter.convertToPdf(f.path);
     if (r.isOk) return PdfPreview(r.pdfPath!, fromOffice: true);
+    if (!r.cancelled) Log.error('Konversi gagal: ${f.name} | ${r.error}');
     return InfoPreview(
       r.error ?? 'Konversi gagal.',
       officeMissing: r.officeMissing,

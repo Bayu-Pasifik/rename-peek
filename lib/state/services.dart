@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/logger.dart';
 import '../data/folder_scanner.dart';
 import '../data/office_converter.dart';
 import '../data/rename_service.dart';
@@ -30,6 +31,8 @@ class AppServices {
   static Future<AppServices> bootstrap() async {
     final support = await getApplicationSupportDirectory();
     await support.create(recursive: true);
+    Log.init(File(p.join(support.path, 'rename-peek.log')));
+    Log.info('Aplikasi dimulai');
     final prefs = await SharedPreferences.getInstance();
 
     // Skrip diekstrak ke disk karena PowerShell butuh path file nyata.

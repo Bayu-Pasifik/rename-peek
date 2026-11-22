@@ -38,6 +38,10 @@ class AppColors extends ThemeExtension<AppColors> {
   }
 }
 
+/// Warna teks (hitam/putih) dengan kontras terbaik di atas [backdrop].
+Color previewForeground(Color backdrop) =>
+    backdrop.computeLuminance() > 0.18 ? const Color(0xFF111111) : Colors.white;
+
 const _fontFallback = ['Segoe UI Variable Text', 'Segoe UI'];
 const monoFontFallback = ['Cascadia Mono', 'Consolas'];
 
@@ -48,7 +52,7 @@ ThemeData _build(Brightness b) {
   final container = dark ? const Color(0xFF1F1F1E) : const Color(0xFFFFFFFF);
   final outline = dark ? const Color(0xFF33322F) : const Color(0xFFE3E1DB);
   final onSurface = dark ? const Color(0xFFECEBE6) : const Color(0xFF1D1D1B);
-  final variant = dark ? const Color(0xFF98958D) : const Color(0xFF77756F);
+  final variant = dark ? const Color(0xFF98958D) : const Color(0xFF6B6963);
 
   final scheme = ColorScheme.fromSeed(seedColor: primary, brightness: b)
       .copyWith(
@@ -108,7 +112,7 @@ ThemeData _build(Brightness b) {
     ),
     extensions: [
       AppColors(
-        success: dark ? const Color(0xFF4CC784) : const Color(0xFF1F8A4C),
+        success: dark ? const Color(0xFF4CC784) : const Color(0xFF187A41),
         warning: dark ? const Color(0xFFF0A35A) : const Color(0xFFB4540A),
         previewBackdrop: dark
             ? const Color(0xFF0E0E0D)

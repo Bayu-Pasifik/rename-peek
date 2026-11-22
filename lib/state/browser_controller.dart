@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/logger.dart';
 import '../data/folder_scanner.dart';
 import '../data/office_converter.dart';
 import '../domain/doc_file.dart';
@@ -18,7 +19,7 @@ class StatusMessage {
 }
 
 class BrowserState {
-  const BrowserState({
+  BrowserState({
     this.dir,
     this.files = const [],
     this.showAll = false,
@@ -36,10 +37,14 @@ class BrowserState {
   final bool canUndo;
   final StatusMessage? status;
 
-  List<DupGroup> get groups => groupFiles(files);
+  /// Dihitung sekali per state (daftar bisa ribuan file).
+  late final List<DupGroup> groups = groupFiles(files);
 
   /// Daftar yang tampil di panel kiri (duplikat saja, atau semua).
-  List<DocFile> get view => flattenGroups(groups, onlyDuplicates: !showAll);
+  late final List<DocFile> view = flattenGroups(
+    groups,
+    onlyDuplicates: !showAll,
+  );
 
   DocFile? get current {
     final v = view;
@@ -161,6 +166,7 @@ class BrowserController extends Notifier<BrowserState> {
 
     final r = await _s.renamer.rename(file: f, input: input, rootDir: dir);
     if (!r.isOk) {
+      Log.error('Rename gagal: ${f.name} | ${r.error}');
       state = state.copyWith(status: _msg(r.error!, isError: true));
       return r.error;
     }
@@ -189,6 +195,11 @@ class BrowserController extends Notifier<BrowserState> {
   void _prefetchNext() {
     final v = state.view;
     final i = state.index + 1;
+    // Hanya file aktif dan berikutnya yang layak dikonversi; sisanya basi.
+    _s.converter.setWanted({
+      if (state.current != null) state.current!.path,
+      if (i < v.length) v[i].path,
+    });
     if (i >= v.length) return;
     final f = v[i];
     if (!isOfficeExt(f.extLower)) return;

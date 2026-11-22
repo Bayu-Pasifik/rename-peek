@@ -115,6 +115,33 @@ void main() {
     expect(await conv.cacheSize(), 0);
   });
 
+  test(
+    'antrean basi dilewati: hanya file yang masih diinginkan dikonversi',
+    () async {
+      if (!await conv.isAvailable(OfficeApp.word)) {
+        markTestSkipped('Word tidak terpasang');
+        return;
+      }
+      final a = p.join(fixtures, 'contoh.docx');
+      // Salinan agar kunci cache berbeda dan semuanya benar-benar dikonversi.
+      final b = File(p.join(tmp.path, 'b.docx'))
+        ..writeAsBytesSync(File(a).readAsBytesSync());
+      final c = File(p.join(tmp.path, 'c.docx'))
+        ..writeAsBytesSync(File(a).readAsBytesSync());
+      final fa = conv.convertToPdf(a);
+      final fb = conv.convertToPdf(b.path);
+      final fc = conv.convertToPdf(c.path);
+      conv.setWanted({a, c.path}); // a sedang jalan, pengguna pindah ke c; b basi
+      final ra = await fa;
+      final rb = await fb;
+      final rc = await fc;
+      expect(ra.isOk, isTrue, reason: ra.error);
+      expect(rb.isOk, isFalse);
+      expect(rb.cancelled, isTrue);
+      expect(rc.isOk, isTrue, reason: rc.error);
+    },
+  );
+
   test('officeAppFor memetakan ekstensi', () {
     expect(officeAppFor('.docx'), OfficeApp.word);
     expect(officeAppFor('.xlsm'), OfficeApp.excel);

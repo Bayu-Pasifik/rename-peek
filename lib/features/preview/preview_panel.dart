@@ -25,7 +25,10 @@ class PreviewPanel extends ConsumerWidget {
       return Container(
         color: backdrop,
         alignment: Alignment.center,
-        child: const Text(S.selectFile, style: TextStyle(color: Colors.white)),
+        child: Text(
+          S.selectFile,
+          style: TextStyle(color: previewForeground(backdrop)),
+        ),
       );
     }
 
@@ -33,7 +36,10 @@ class PreviewPanel extends ConsumerWidget {
     return Container(
       color: backdrop,
       child: spec.when(
-        loading: () => _Loading(office: isOfficeExt(file.extLower)),
+        loading: () => _Loading(
+          office: isOfficeExt(file.extLower),
+          color: previewForeground(backdrop),
+        ),
         error: (e, _) => InfoCard(file: file, reason: '$e'),
         data: (p) => switch (p) {
           PdfPreview() => PdfPane(
@@ -55,8 +61,9 @@ class PreviewPanel extends ConsumerWidget {
 }
 
 class _Loading extends StatelessWidget {
-  const _Loading({required this.office});
+  const _Loading({required this.office, required this.color});
   final bool office;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +74,10 @@ class _Loading extends StatelessWidget {
           child: LinearProgressIndicator(minHeight: 2),
         ),
         if (office)
-          const Center(
+          Center(
             child: Text(
               S.preparingPreview,
-              style: TextStyle(color: Colors.white, fontSize: 15),
+              style: TextStyle(color: color, fontSize: 15),
             ),
           ),
       ],

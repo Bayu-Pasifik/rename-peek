@@ -9,15 +9,22 @@ import 'package:path/path.dart' as p;
 class ConvertResult {
   const ConvertResult.ok(String this.pdfPath)
     : error = null,
-      officeMissing = false;
-  const ConvertResult.fail(String this.error, {this.officeMissing = false})
-    : pdfPath = null;
+      officeMissing = false,
+      cancelled = false;
+  const ConvertResult.fail(
+    String this.error, {
+    this.officeMissing = false,
+    this.cancelled = false,
+  }) : pdfPath = null;
 
   final String? pdfPath;
   final String? error;
 
   /// True bila aplikasi Office yang dibutuhkan tidak terpasang.
   final bool officeMissing;
+
+  /// True bila dibatalkan karena pengguna sudah pindah dari file itu.
+  final bool cancelled;
   bool get isOk => pdfPath != null;
 }
 
@@ -61,6 +68,7 @@ class OfficeConverter {
   final Duration timeout;
 
   Future<void> _queue = Future<void>.value();
+  Set<String>? _wanted;
   final Map<String, Future<ConvertResult>> _inflight = {};
   final Map<OfficeApp, bool> _availability = {};
 
@@ -99,9 +107,22 @@ class OfficeConverter {
       ..whenComplete(() => _inflight.remove(out.path));
   }
 
+  /// Batasi antrean: pekerjaan yang belum mulai untuk file di luar [paths]
+  /// dilewati. Dipakai agar pindah file cepat tidak menunggu konversi basi.
+  /// null = semua pekerjaan boleh jalan.
+  // ignore: use_setters_to_change_properties
+  void setWanted(Set<String>? paths) => _wanted = paths;
+
   Future<ConvertResult> _enqueue(OfficeApp app, File src, File out) {
     final completer = Completer<ConvertResult>();
     _queue = _queue.then((_) async {
+      final wanted = _wanted;
+      if (wanted != null && !wanted.contains(src.path)) {
+        completer.complete(
+          const ConvertResult.fail('Dibatalkan.', cancelled: true),
+        );
+        return;
+      }
       try {
         completer.complete(await _run(app, src, out));
       } on Object catch (e) {

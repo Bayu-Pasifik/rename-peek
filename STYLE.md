@@ -44,9 +44,9 @@ Material 3 dengan skema warna kustom; seluruh warna diambil dari `ColorScheme` d
 | `surfaceContainer` | `#FFFFFF` | `#1F1F1E` | toolbar, daftar, bar rename |
 | `outline` | `#E3E1DB` | `#33322F` | garis pembatas 1 px |
 | `onSurface` | `#1D1D1B` | `#ECEBE6` | teks utama |
-| `onSurfaceVariant` | `#77756F` | `#98958D` | teks sekunder, ukuran file |
+| `onSurfaceVariant` | `#6B6963` | `#98958D` | teks sekunder, ukuran file |
 | `primary` | `#2A5BD7` | `#7AA2FF` | aksen: item aktif, tombol utama, fokus |
-| `success` | `#1F8A4C` | `#4CC784` | konfirmasi rename |
+| `success` | `#187A41` | `#4CC784` | konfirmasi rename |
 | `warning` | `#B4540A` | `#F0A35A` | error/peringatan di status |
 | `previewBackdrop` | `#8A8A87` | `#0E0E0D` | latar di belakang halaman PDF/gambar |
 

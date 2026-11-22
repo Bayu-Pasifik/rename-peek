@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/format.dart';
+import '../../core/logger.dart';
 import '../../l10n/strings.dart';
 import '../../state/providers.dart';
 import '../../state/theme_controller.dart';
@@ -102,6 +103,17 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
                   ],
                 ),
               ),
+              if (Log.path != null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Berkas log',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+                SelectableText(Log.path!, style: const TextStyle(fontSize: 12)),
+              ],
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerRight,
