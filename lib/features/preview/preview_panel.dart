@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -99,13 +100,39 @@ class PdfPane extends StatefulWidget {
 class _PdfPaneState extends State<PdfPane> {
   final PdfViewerController _controller = PdfViewerController();
 
+  // Dibaca ke memori supaya tidak ada handle terbuka di file asli;
+  // kalau tidak, Windows menolak rename dengan "file sedang dipakai".
+  late final Future<Uint8List> _bytes = File(widget.path).readAsBytes();
+
   @override
   Widget build(BuildContext context) {
     final backdrop = AppColors.of(context).previewBackdrop;
+    return FutureBuilder<Uint8List>(
+      future: _bytes,
+      builder: (context, snap) {
+        if (snap.hasError) {
+          return InfoCard(
+            file: widget.file,
+            reason: 'PDF tidak bisa dibaca.',
+          );
+        }
+        if (!snap.hasData) {
+          return const Align(
+            alignment: Alignment.topCenter,
+            child: LinearProgressIndicator(minHeight: 2),
+          );
+        }
+        return _buildViewer(context, backdrop, snap.data!);
+      },
+    );
+  }
+
+  Widget _buildViewer(BuildContext context, Color backdrop, Uint8List data) {
     return Stack(
       children: [
-        PdfViewer.file(
-          widget.path,
+        PdfViewer.data(
+          data,
+          sourceName: widget.path,
           controller: _controller,
           params: PdfViewerParams(
             backgroundColor: backdrop,

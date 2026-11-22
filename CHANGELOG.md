@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 - 2026-11-22
+
+- Perbaikan: rename PDF yang sedang dipreview tidak lagi gagal dengan "File sedang dipakai aplikasi lain". Preview PDF kini dibaca ke memori sehingga tidak menahan handle file asli.
+
 ## 1.1.0 - 2026-11-22
 
 - Ikon aplikasi kustom (dua halaman bertumpuk dan kotak nama dengan kursor), dibuat oleh tools/make_icon.ps1.
