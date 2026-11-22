@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:window_manager/legacy.dart';
 
+import 'app.dart';
+import 'state/providers.dart';
+import 'state/services.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -17,18 +21,11 @@ Future<void> main() async {
     await windowManager.show();
     await windowManager.focus();
   });
-  runApp(const ProviderScope(child: RenamePeekApp()));
-}
-
-class RenamePeekApp extends StatelessWidget {
-  const RenamePeekApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Rename Peek',
-      debugShowCheckedModeBanner: false,
-      home: const Scaffold(body: Center(child: Text('Rename Peek'))),
-    );
-  }
+  final services = await AppServices.bootstrap();
+  runApp(
+    ProviderScope(
+      overrides: [servicesProvider.overrideWithValue(services)],
+      child: const RenamePeekApp(),
+    ),
+  );
 }
