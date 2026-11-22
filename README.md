@@ -1,5 +1,7 @@
 # Rename Peek
 
+<img src="assets/icon/app_icon.png" width="96" alt="Ikon Rename Peek">
+
 Aplikasi desktop Windows (Flutter) untuk mengganti nama file hasil unduhan yang bernama sama: `dokumen.pdf`, `dokumen (1).pdf`, `dokumen (2).pdf`, dan seterusnya.
 
 Alurnya: pilih folder, aplikasi mengelompokkan file duplikat dan menampilkan preview besar satu per satu, kamu ketik nama baru lalu Enter, dan aplikasi lanjut ke file berikutnya. Tidak perlu membuka tiap file di aplikasi lain.
@@ -34,6 +36,18 @@ Alurnya: pilih folder, aplikasi mengelompokkan file duplikat dan menampilkan pre
 - Windows 10/11 64-bit.
 - Preview Word/Excel/PowerPoint butuh Microsoft Office terpasang. Tanpa Office, file itu tampil sebagai kartu info dengan tombol "Buka asli"; PDF, gambar, dan teks tetap normal.
 - Jika aplikasi gagal start di PC yang sangat bersih, pasang Microsoft Visual C++ Redistributable 2015-2022 (x64).
+
+## Memasang
+
+Jalankan `RenamePeek-Setup-<versi>.exe`. Pemasangan per-pengguna (tanpa hak admin), membuat shortcut di Start Menu, dan menawarkan shortcut Desktop. Hapus lewat Settings > Apps. Data (riwayat undo dan log) sengaja dibiarkan di `%APPDATA%\com.renamepeek`.
+
+Membangun installer sendiri (butuh Inno Setup 6: `winget install JRSoftware.InnoSetup`):
+
+```
+powershell -ExecutionPolicy Bypass -File installer\build_installer.ps1
+```
+
+Hasilnya di `build\installer\`. Ikon dibuat ulang dengan `tools\make_icon.ps1`.
 
 ## Menjalankan dari rilis
 

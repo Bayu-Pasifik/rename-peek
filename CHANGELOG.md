@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 - 2026-11-22
+
+- Ikon aplikasi kustom (dua halaman bertumpuk dan kotak nama dengan kursor), dibuat oleh tools/make_icon.ps1.
+- Installer Windows (Inno Setup): instal per-pengguna tanpa admin, shortcut Start Menu, opsi shortcut Desktop, runtime Visual C++ ikut dibundel, uninstaller bersih. Bangun dengan installer/build_installer.ps1.
+
 ## 1.0.0 - 2026-11-22
 
 Rilis pertama.

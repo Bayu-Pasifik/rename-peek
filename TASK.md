@@ -21,7 +21,7 @@ Prasyarat mesin: Flutter SDK (sudah ada di `D:\program\flutter`) dengan Windows 
 - [x] Susun struktur folder sesuai `STYLE.md` bagian 10.
 - [x] Atur `analysis_options.yaml` (lint sesuai STYLE).
 - [x] Atur jendela: ukuran awal 1280x800, minimum 960x600, judul "Rename Peek" lewat `window_manager`.
-- [ ] Ikon aplikasi kustom (masih ikon Flutter bawaan). Nama eksekutabel: rename_peek.exe, judul jendela: Rename Peek.
+- [x] Ikon aplikasi kustom (tools/make_icon.ps1 menghasilkan PNG dan ICO 16-256 px). Nama eksekutabel: rename_peek.exe, judul jendela: Rename Peek.
 
 **Selesai bila:** `flutter run -d windows` membuka jendela kosong berjudul benar; `flutter analyze` bersih.
 
@@ -99,7 +99,7 @@ Prasyarat mesin: Flutter SDK (sudah ada di `D:\program\flutter`) dengan Windows 
 ## Fase 9 — Rilis
 - [x] `flutter build windows --release`; uji folder `build\windows\x64\runner\Release` di mesin bersih (tanpa Flutter).
 - [x] README singkat: cara pakai, pintasan, syarat Office untuk preview Word/Excel.
-- [ ] (Opsional) paket MSIX atau installer Inno Setup; shortcut Start Menu. Belum dibuat.
+- [x] Installer Inno Setup (installer/build_installer.ps1): per-pengguna tanpa admin, shortcut Start Menu, opsi shortcut Desktop, runtime Visual C++ disertakan, uninstaller. MSIX tidak dibuat (butuh sertifikat penandatangan).
 - [x] Tandai versi 1.0.0 (tag v1.0.0), catat perubahan di CHANGELOG.md.
 
 **Selesai bila:** pengguna bisa menyalin folder rilis ke PC lain dan langsung memakai tanpa instalasi tambahan.
