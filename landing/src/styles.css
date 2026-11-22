@@ -1,23 +1,24 @@
 :root {
-  --bg: #fbf9f6;
+  --bg: #f4faff;
   --surface: #ffffff;
-  --ink: #1d1a17;
-  --muted: #6b645d;
-  --line: #e8e2da;
-  --accent: #c2512f;
+  --ink: #0c1a26;
+  --muted: #55697a;
+  --line: #d6e8f5;
+  --accent: #0284c7;
   --accent-ink: #ffffff;
-  --accent-soft: #fbece6;
+  --accent-soft: #e0f2fe;
   --radius: 14px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #161412;
-    --surface: #1f1c19;
-    --ink: #f3eee8;
-    --muted: #a39b92;
-    --line: #2f2b27;
-    --accent: #e06b47;
-    --accent-soft: #2c1d17;
+    --bg: #0a141c;
+    --surface: #101e29;
+    --ink: #e8f4fc;
+    --muted: #8fa7b8;
+    --line: #1d3345;
+    --accent: #38bdf8;
+    --accent-ink: #04202f;
+    --accent-soft: #0f2a3b;
   }
 }
 * { box-sizing: border-box; }
@@ -60,7 +61,7 @@ h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 .note { color: var(--muted); font-size: 14px; margin: 14px 0 48px; }
 
 /* mock */
-.mock { max-width: 820px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 24px 60px -24px rgba(60, 30, 10, .35); overflow: hidden; text-align: left; }
+.mock { max-width: 820px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 24px 60px -24px rgba(2, 100, 160, .30); overflow: hidden; text-align: left; }
 .mock-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
 .mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
 .mock-bar span { margin-left: 10px; }
