@@ -94,7 +94,9 @@ SanitizeResult sanitizeName(String input, String ext) {
   }
   final firstPart = s.split('.').first;
   if (_reserved.hasMatch(firstPart)) {
-    return SanitizeResult.fail('"$firstPart" adalah nama yang dilarang Windows.');
+    return SanitizeResult.fail(
+      '"$firstPart" adalah nama yang dilarang Windows.',
+    );
   }
   return SanitizeResult.ok(s);
 }

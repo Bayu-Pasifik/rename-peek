@@ -13,7 +13,8 @@ abstract final class S {
   // Daftar
   static const emptyTitle = 'Tidak ada file duplikat di folder ini';
   static const emptyNoFolder = 'Pilih folder untuk mulai.';
-  static const emptyHint = 'Centang "Tampilkan semua file" untuk melihat semuanya.';
+  static const emptyHint =
+      'Centang "Tampilkan semua file" untuk melihat semuanya.';
   static const pickOtherFolder = 'Pilih folder lain';
   static String groupHeader(String key, int count) =>
       count > 1 ? '$key · $count file' : key;
@@ -34,7 +35,8 @@ abstract final class S {
 
   // Status
   static const ready = 'Siap.';
-  static const shortcutsHint = 'Enter simpan · Alt+↓/↑ lewati/kembali · Ctrl+Z undo';
+  static const shortcutsHint =
+      'Enter simpan · Alt+↓/↑ lewati/kembali · Ctrl+Z undo';
   static const dropFolder = 'Lepas untuk membuka folder';
 
   // Pengaturan

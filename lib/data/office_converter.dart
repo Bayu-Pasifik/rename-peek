@@ -8,10 +8,10 @@ import 'package:path/path.dart' as p;
 /// Hasil konversi Office ke PDF.
 class ConvertResult {
   const ConvertResult.ok(String this.pdfPath)
-      : error = null,
-        officeMissing = false;
+    : error = null,
+      officeMissing = false;
   const ConvertResult.fail(String this.error, {this.officeMissing = false})
-      : pdfPath = null;
+    : pdfPath = null;
 
   final String? pdfPath;
   final String? error;
@@ -68,15 +68,16 @@ class OfficeConverter {
   Future<bool> isAvailable(OfficeApp app) async {
     final cached = _availability[app];
     if (cached != null) return cached;
-    final r = await Process.run(
-      'reg',
-      ['query', 'HKCR\\${app.progId}\\CLSID'],
-    );
+    final r = await Process.run('reg', ['query', 'HKCR\\${app.progId}\\CLSID']);
     return _availability[app] = r.exitCode == 0;
   }
 
   String _cacheKey(File src, FileStat st) => sha1
-      .convert(utf8.encode('${src.path}|${st.modified.millisecondsSinceEpoch}|${st.size}'))
+      .convert(
+        utf8.encode(
+          '${src.path}|${st.modified.millisecondsSinceEpoch}|${st.size}',
+        ),
+      )
       .toString();
 
   Future<ConvertResult> convertToPdf(String srcPath) async {
@@ -118,7 +119,9 @@ class OfficeConverter {
       );
     }
     await cacheDir.create(recursive: true);
-    final part = File(p.join(cacheDir.path, '${p.basenameWithoutExtension(out.path)}.part.pdf'));
+    final part = File(
+      p.join(cacheDir.path, '${p.basenameWithoutExtension(out.path)}.part.pdf'),
+    );
     if (await part.exists()) await part.delete();
 
     final proc = await Process.start('powershell.exe', [
@@ -134,7 +137,9 @@ class OfficeConverter {
       part.path,
     ]);
     final stderrBuf = StringBuffer();
-    final errDone = proc.stderr.transform(utf8.decoder).forEach(stderrBuf.write);
+    final errDone = proc.stderr
+        .transform(utf8.decoder)
+        .forEach(stderrBuf.write);
     unawaited(proc.stdout.drain<void>());
 
     int code;

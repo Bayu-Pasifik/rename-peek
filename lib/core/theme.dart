@@ -17,12 +17,15 @@ class AppColors extends ThemeExtension<AppColors> {
       Theme.of(context).extension<AppColors>()!;
 
   @override
-  AppColors copyWith({Color? success, Color? warning, Color? previewBackdrop}) =>
-      AppColors(
-        success: success ?? this.success,
-        warning: warning ?? this.warning,
-        previewBackdrop: previewBackdrop ?? this.previewBackdrop,
-      );
+  AppColors copyWith({
+    Color? success,
+    Color? warning,
+    Color? previewBackdrop,
+  }) => AppColors(
+    success: success ?? this.success,
+    warning: warning ?? this.warning,
+    previewBackdrop: previewBackdrop ?? this.previewBackdrop,
+  );
 
   @override
   AppColors lerp(ThemeExtension<AppColors>? other, double t) {
@@ -47,19 +50,20 @@ ThemeData _build(Brightness b) {
   final onSurface = dark ? const Color(0xFFECEBE6) : const Color(0xFF1D1D1B);
   final variant = dark ? const Color(0xFF98958D) : const Color(0xFF77756F);
 
-  final scheme = ColorScheme.fromSeed(seedColor: primary, brightness: b).copyWith(
-    primary: primary,
-    onPrimary: dark ? const Color(0xFF0B1B44) : Colors.white,
-    surface: surface,
-    onSurface: onSurface,
-    onSurfaceVariant: variant,
-    surfaceContainer: container,
-    surfaceContainerLow: container,
-    surfaceContainerHigh: container,
-    outline: outline,
-    outlineVariant: outline,
-    error: dark ? const Color(0xFFF0A35A) : const Color(0xFFB4540A),
-  );
+  final scheme = ColorScheme.fromSeed(seedColor: primary, brightness: b)
+      .copyWith(
+        primary: primary,
+        onPrimary: dark ? const Color(0xFF0B1B44) : Colors.white,
+        surface: surface,
+        onSurface: onSurface,
+        onSurfaceVariant: variant,
+        surfaceContainer: container,
+        surfaceContainerLow: container,
+        surfaceContainerHigh: container,
+        outline: outline,
+        outlineVariant: outline,
+        error: dark ? const Color(0xFFF0A35A) : const Color(0xFFB4540A),
+      );
 
   return ThemeData(
     useMaterial3: true,
@@ -106,7 +110,9 @@ ThemeData _build(Brightness b) {
       AppColors(
         success: dark ? const Color(0xFF4CC784) : const Color(0xFF1F8A4C),
         warning: dark ? const Color(0xFFF0A35A) : const Color(0xFFB4540A),
-        previewBackdrop: dark ? const Color(0xFF0E0E0D) : const Color(0xFF8A8A87),
+        previewBackdrop: dark
+            ? const Color(0xFF0E0E0D)
+            : const Color(0xFF8A8A87),
       ),
     ],
   );

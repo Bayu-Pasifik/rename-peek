@@ -40,7 +40,9 @@ class AppServices {
 
     final converter = OfficeConverter(
       scriptPath: script.path,
-      cacheDir: Directory(p.join(Directory.systemTemp.path, 'rename-peek-cache')),
+      cacheDir: Directory(
+        p.join(Directory.systemTemp.path, 'rename-peek-cache'),
+      ),
     );
     await converter.trimCache();
     return AppServices(

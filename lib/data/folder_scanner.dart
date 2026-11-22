@@ -37,12 +37,14 @@ class FolderScanner {
         if (isIgnoredFileName(name)) continue;
         try {
           final st = await e.stat();
-          result.add(DocFile(
-            path: e.path,
-            name: name,
-            size: st.size,
-            modified: st.modified,
-          ));
+          result.add(
+            DocFile(
+              path: e.path,
+              name: name,
+              size: st.size,
+              modified: st.modified,
+            ),
+          );
         } on FileSystemException {
           // File hilang saat dipindai; lewati saja.
         }

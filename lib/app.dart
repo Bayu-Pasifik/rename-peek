@@ -56,12 +56,18 @@ class FocusNameIntent extends Intent {
 /// Peta pintasan. Shortcut ini kalah dari TextField yang sedang fokus
 /// (mis. Ctrl+Z di dalam input tetap undo teks, bukan undo rename).
 final Map<ShortcutActivator, Intent> appShortcuts = {
-  const SingleActivator(LogicalKeyboardKey.arrowDown, alt: true): const NextFileIntent(),
-  const SingleActivator(LogicalKeyboardKey.arrowUp, alt: true): const PrevFileIntent(),
-  const SingleActivator(LogicalKeyboardKey.keyZ, control: true): const UndoRenameIntent(),
+  const SingleActivator(LogicalKeyboardKey.arrowDown, alt: true):
+      const NextFileIntent(),
+  const SingleActivator(LogicalKeyboardKey.arrowUp, alt: true):
+      const PrevFileIntent(),
+  const SingleActivator(LogicalKeyboardKey.keyZ, control: true):
+      const UndoRenameIntent(),
   const SingleActivator(LogicalKeyboardKey.f5): const ReloadIntent(),
-  const SingleActivator(LogicalKeyboardKey.keyO, control: true): const PickFolderIntent(),
-  const SingleActivator(LogicalKeyboardKey.enter, control: true): const OpenOriginalIntent(),
-  const SingleActivator(LogicalKeyboardKey.keyL, control: true): const FocusNameIntent(),
+  const SingleActivator(LogicalKeyboardKey.keyO, control: true):
+      const PickFolderIntent(),
+  const SingleActivator(LogicalKeyboardKey.enter, control: true):
+      const OpenOriginalIntent(),
+  const SingleActivator(LogicalKeyboardKey.keyL, control: true):
+      const FocusNameIntent(),
   const SingleActivator(LogicalKeyboardKey.escape): const FocusNameIntent(),
 };

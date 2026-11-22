@@ -7,7 +7,9 @@ import '../../state/providers.dart';
 
 /// Membuka dialog pilih folder native lalu memuat folder itu.
 Future<void> pickFolder(WidgetRef ref) async {
-  final path = await FilePicker.platform.getDirectoryPath(dialogTitle: 'Pilih folder');
+  final path = await FilePicker.platform.getDirectoryPath(
+    dialogTitle: 'Pilih folder',
+  );
   if (path != null) {
     await ref.read(browserProvider.notifier).openFolder(path);
   }
@@ -17,5 +19,7 @@ Future<void> pickFolder(WidgetRef ref) async {
 Future<void> openOriginal(WidgetRef ref) async {
   final f = ref.read(browserProvider).current;
   if (f == null) return;
-  await Process.start('explorer.exe', [f.path], mode: ProcessStartMode.detached);
+  await Process.start('explorer.exe', [
+    f.path,
+  ], mode: ProcessStartMode.detached);
 }

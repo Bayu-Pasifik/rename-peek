@@ -81,9 +81,18 @@ void main() {
     test('nama kosong, reserved, dan tidak berubah ditolak', () async {
       make('a.pdf');
       final f = await doc('a.pdf');
-      expect((await svc.rename(file: f, input: '  ', rootDir: work.path)).isOk, isFalse);
-      expect((await svc.rename(file: f, input: 'CON', rootDir: work.path)).isOk, isFalse);
-      expect((await svc.rename(file: f, input: 'a', rootDir: work.path)).isOk, isFalse);
+      expect(
+        (await svc.rename(file: f, input: '  ', rootDir: work.path)).isOk,
+        isFalse,
+      );
+      expect(
+        (await svc.rename(file: f, input: 'CON', rootDir: work.path)).isOk,
+        isFalse,
+      );
+      expect(
+        (await svc.rename(file: f, input: 'a', rootDir: work.path)).isOk,
+        isFalse,
+      );
       expect(File(p.join(work.path, 'a.pdf')).existsSync(), isTrue);
     });
 
@@ -131,7 +140,10 @@ void main() {
         rootDir: work.path,
       );
       expect(r.isOk, isTrue);
-      expect(File(p.join(work.path, 'Surat 📄 Pajak.pdf')).existsSync(), isTrue);
+      expect(
+        File(p.join(work.path, 'Surat 📄 Pajak.pdf')).existsSync(),
+        isTrue,
+      );
     });
 
     test('file terkunci gagal rapi tanpa melempar', () async {
@@ -154,7 +166,11 @@ void main() {
   group('UndoLog', () {
     test('undo mengembalikan nama lama', () async {
       make('a.pdf');
-      await svc.rename(file: await doc('a.pdf'), input: 'baru', rootDir: work.path);
+      await svc.rename(
+        file: await doc('a.pdf'),
+        input: 'baru',
+        rootDir: work.path,
+      );
       expect(await log.canUndo, isTrue);
       final u = await log.undoLast();
       expect(u.isOk, isTrue);
@@ -165,8 +181,16 @@ void main() {
     test('undo berlapis berurutan terbalik', () async {
       make('a.pdf');
       make('b.pdf');
-      await svc.rename(file: await doc('a.pdf'), input: 'a1', rootDir: work.path);
-      await svc.rename(file: await doc('b.pdf'), input: 'b1', rootDir: work.path);
+      await svc.rename(
+        file: await doc('a.pdf'),
+        input: 'a1',
+        rootDir: work.path,
+      );
+      await svc.rename(
+        file: await doc('b.pdf'),
+        input: 'b1',
+        rootDir: work.path,
+      );
       await log.undoLast();
       expect(File(p.join(work.path, 'b.pdf')).existsSync(), isTrue);
       expect(File(p.join(work.path, 'a1.pdf')).existsSync(), isTrue);
@@ -176,25 +200,40 @@ void main() {
 
     test('tahan restart: log dibaca ulang dari disk', () async {
       make('a.pdf');
-      await svc.rename(file: await doc('a.pdf'), input: 'baru', rootDir: work.path);
+      await svc.rename(
+        file: await doc('a.pdf'),
+        input: 'baru',
+        rootDir: work.path,
+      );
       final reopened = UndoLog(log.file);
       expect((await reopened.undoLast()).isOk, isTrue);
     });
 
-    test('ditolak bila nama lama sudah dipakai; catatan dipertahankan', () async {
-      make('a.pdf');
-      await svc.rename(file: await doc('a.pdf'), input: 'baru', rootDir: work.path);
-      make('a.pdf', 'lain');
-      final u = await log.undoLast();
-      expect(u.isOk, isFalse);
-      expect(u.error, contains('sudah dipakai'));
-      expect(File(p.join(work.path, 'a.pdf')).readAsStringSync(), 'lain');
-      expect(await log.canUndo, isTrue);
-    });
+    test(
+      'ditolak bila nama lama sudah dipakai; catatan dipertahankan',
+      () async {
+        make('a.pdf');
+        await svc.rename(
+          file: await doc('a.pdf'),
+          input: 'baru',
+          rootDir: work.path,
+        );
+        make('a.pdf', 'lain');
+        final u = await log.undoLast();
+        expect(u.isOk, isFalse);
+        expect(u.error, contains('sudah dipakai'));
+        expect(File(p.join(work.path, 'a.pdf')).readAsStringSync(), 'lain');
+        expect(await log.canUndo, isTrue);
+      },
+    );
 
     test('ditolak bila hasil rename sudah hilang', () async {
       make('a.pdf');
-      await svc.rename(file: await doc('a.pdf'), input: 'baru', rootDir: work.path);
+      await svc.rename(
+        file: await doc('a.pdf'),
+        input: 'baru',
+        rootDir: work.path,
+      );
       File(p.join(work.path, 'baru.pdf')).deleteSync();
       final u = await log.undoLast();
       expect(u.isOk, isFalse);

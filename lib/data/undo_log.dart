@@ -13,11 +13,11 @@ class RenameLogEntry {
   });
 
   factory RenameLogEntry.fromJson(Map<String, dynamic> j) => RenameLogEntry(
-        dir: j['dir'] as String,
-        from: j['from'] as String,
-        to: j['to'] as String,
-        at: DateTime.parse(j['at'] as String),
-      );
+    dir: j['dir'] as String,
+    from: j['from'] as String,
+    to: j['to'] as String,
+    at: DateTime.parse(j['at'] as String),
+  );
 
   final String dir;
   final String from;
@@ -25,11 +25,11 @@ class RenameLogEntry {
   final DateTime at;
 
   Map<String, dynamic> toJson() => {
-        'dir': dir,
-        'from': from,
-        'to': to,
-        'at': at.toIso8601String(),
-      };
+    'dir': dir,
+    'from': from,
+    'to': to,
+    'at': at.toIso8601String(),
+  };
 }
 
 /// Hasil undo.
@@ -80,7 +80,9 @@ class UndoLog {
   /// Membatalkan rename terakhir. Catatan hanya dihapus bila undo berhasil.
   Future<UndoResult> undoLast() async {
     final list = await _read();
-    if (list.isEmpty) return const UndoResult.fail('Tidak ada yang bisa di-undo.');
+    if (list.isEmpty) {
+      return const UndoResult.fail('Tidak ada yang bisa di-undo.');
+    }
     final last = list.last;
     final current = File(p.join(last.dir, last.to));
     final original = File(p.join(last.dir, last.from));

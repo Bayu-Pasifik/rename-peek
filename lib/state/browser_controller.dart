@@ -55,16 +55,15 @@ class BrowserState {
     bool? canUndo,
     StatusMessage? status,
     bool clearStatus = false,
-  }) =>
-      BrowserState(
-        dir: dir ?? this.dir,
-        files: files ?? this.files,
-        showAll: showAll ?? this.showAll,
-        index: index ?? this.index,
-        loading: loading ?? this.loading,
-        canUndo: canUndo ?? this.canUndo,
-        status: clearStatus ? null : (status ?? this.status),
-      );
+  }) => BrowserState(
+    dir: dir ?? this.dir,
+    files: files ?? this.files,
+    showAll: showAll ?? this.showAll,
+    index: index ?? this.index,
+    loading: loading ?? this.loading,
+    canUndo: canUndo ?? this.canUndo,
+    status: clearStatus ? null : (status ?? this.status),
+  );
 }
 
 class BrowserController extends Notifier<BrowserState> {
@@ -86,7 +85,12 @@ class BrowserController extends Notifier<BrowserState> {
   }
 
   Future<void> openFolder(String path) async {
-    state = state.copyWith(dir: path, index: 0, loading: true, clearStatus: true);
+    state = state.copyWith(
+      dir: path,
+      index: 0,
+      loading: true,
+      clearStatus: true,
+    );
     await _scan();
     if (state.status == null || !state.status!.isError) {
       await _s.settings.setLastFolder(path);
@@ -151,7 +155,9 @@ class BrowserController extends Notifier<BrowserState> {
     if (f == null || dir == null) return 'Tidak ada file yang dipilih.';
 
     final view = state.view;
-    final following = state.index + 1 < view.length ? view[state.index + 1].name : null;
+    final following = state.index + 1 < view.length
+        ? view[state.index + 1].name
+        : null;
 
     final r = await _s.renamer.rename(file: f, input: input, rootDir: dir);
     if (!r.isOk) {
@@ -170,7 +176,9 @@ class BrowserController extends Notifier<BrowserState> {
       return;
     }
     final e = r.entry!;
-    state = state.copyWith(status: _msg('↶ Dikembalikan: ${e.to}  →  ${e.from}'));
+    state = state.copyWith(
+      status: _msg('↶ Dikembalikan: ${e.to}  →  ${e.from}'),
+    );
     // Undo bisa terjadi di folder lain dari yang sedang dibuka.
     await _scan(select: e.from);
   }

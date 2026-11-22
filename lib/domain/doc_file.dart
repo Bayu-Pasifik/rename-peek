@@ -51,15 +51,15 @@ List<DupGroup> groupFiles(Iterable<DocFile> files) {
     map.putIfAbsent(f.groupKey, () => []).add(f);
   }
   final groups = map.entries.map((e) {
-    final list = [...e.value]..sort((a, b) {
+    final list = [...e.value]
+      ..sort((a, b) {
         final c = a.number.compareTo(b.number);
         return c != 0
             ? c
             : a.name.toLowerCase().compareTo(b.name.toLowerCase());
       });
     return DupGroup(e.key, list);
-  }).toList()
-    ..sort((a, b) => a.key.compareTo(b.key));
+  }).toList()..sort((a, b) => a.key.compareTo(b.key));
   return groups;
 }
 
@@ -67,8 +67,7 @@ List<DupGroup> groupFiles(Iterable<DocFile> files) {
 List<DocFile> flattenGroups(
   List<DupGroup> groups, {
   required bool onlyDuplicates,
-}) =>
-    [
-      for (final g in groups)
-        if (!onlyDuplicates || g.isDuplicate) ...g.files,
-    ];
+}) => [
+  for (final g in groups)
+    if (!onlyDuplicates || g.isDuplicate) ...g.files,
+];

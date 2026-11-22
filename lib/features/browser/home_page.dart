@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../l10n/strings.dart';
 import '../../state/providers.dart';
 import '../preview/preview_panel.dart';
 import '../rename/rename_bar.dart';
@@ -25,6 +29,24 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   final FocusNode _nameFocus = FocusNode(debugLabel: 'nameField');
   double? _listWidth;
+  bool _dragging = false;
+
+  Future<void> _onDrop(DropDetails d) async {
+    setState(() => _dragging = false);
+    // Folder dibuka langsung; bila file, buka folder induknya.
+    for (final item in d.items) {
+      String? folder;
+      if (item is DropDirectoryItem && item.localPath != null) {
+        folder = item.localPath;
+      } else if (item is DropFileItem && item.localPath != null) {
+        folder = File(item.localPath!).parent.path;
+      }
+      if (folder != null) {
+        await ref.read(browserProvider.notifier).openFolder(folder);
+        return;
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -50,14 +72,24 @@ class _HomePageState extends ConsumerState<HomePage> {
       shortcuts: appShortcuts,
       child: Actions(
         actions: {
-          NextFileIntent: CallbackAction<NextFileIntent>(onInvoke: (_) => ctl.next()),
-          PrevFileIntent: CallbackAction<PrevFileIntent>(onInvoke: (_) => ctl.previous()),
-          UndoRenameIntent: CallbackAction<UndoRenameIntent>(onInvoke: (_) => ctl.undo()),
-          ReloadIntent: CallbackAction<ReloadIntent>(onInvoke: (_) => ctl.reload()),
-          PickFolderIntent:
-              CallbackAction<PickFolderIntent>(onInvoke: (_) => pickFolder(ref)),
-          OpenOriginalIntent:
-              CallbackAction<OpenOriginalIntent>(onInvoke: (_) => openOriginal(ref)),
+          NextFileIntent: CallbackAction<NextFileIntent>(
+            onInvoke: (_) => ctl.next(),
+          ),
+          PrevFileIntent: CallbackAction<PrevFileIntent>(
+            onInvoke: (_) => ctl.previous(),
+          ),
+          UndoRenameIntent: CallbackAction<UndoRenameIntent>(
+            onInvoke: (_) => ctl.undo(),
+          ),
+          ReloadIntent: CallbackAction<ReloadIntent>(
+            onInvoke: (_) => ctl.reload(),
+          ),
+          PickFolderIntent: CallbackAction<PickFolderIntent>(
+            onInvoke: (_) => pickFolder(ref),
+          ),
+          OpenOriginalIntent: CallbackAction<OpenOriginalIntent>(
+            onInvoke: (_) => openOriginal(ref),
+          ),
           FocusNameIntent: CallbackAction<FocusNameIntent>(
             onInvoke: (_) {
               _nameFocus.requestFocus();
@@ -68,41 +100,89 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: Focus(
           autofocus: true,
           child: Scaffold(
-            body: LayoutBuilder(
-              builder: (context, box) {
-                final narrow = box.maxWidth < _narrowBreakpoint;
-                final width = (_listWidth ?? (narrow ? 240.0 : 300.0))
-                    .clamp(_minList, _maxList);
-                return Column(
-                  children: [
-                    const Toolbar(),
-                    Divider(height: 1, color: theme.colorScheme.outline),
-                    Expanded(
-                      child: Row(
+            body: _DropWrapper(
+              onEnter: (_) => setState(() => _dragging = true),
+              onLeave: () => setState(() => _dragging = false),
+              onDrop: _onDrop,
+              child: Stack(
+                children: [
+                  LayoutBuilder(
+                    builder: (context, box) {
+                      final narrow = box.maxWidth < _narrowBreakpoint;
+                      final width = (_listWidth ?? (narrow ? 240.0 : 300.0))
+                          .clamp(_minList, _maxList);
+                      return Column(
                         children: [
-                          SizedBox(key: const ValueKey('listPane'), width: width, child: const FileList()),
-                          _Splitter(
-                            onDrag: (dx) => setState(() {
-                              _listWidth = (width + dx).clamp(_minList, _maxList);
-                            }),
-                          ),
+                          const Toolbar(),
+                          Divider(height: 1, color: theme.colorScheme.outline),
                           Expanded(
-                            child: Column(
+                            child: Row(
                               children: [
-                                RenameBar(focusNode: _nameFocus),
-                                Divider(height: 1, color: theme.colorScheme.outline),
-                                const Expanded(child: PreviewPanel()),
+                                SizedBox(
+                                  key: const ValueKey('listPane'),
+                                  width: width,
+                                  child: const FileList(),
+                                ),
+                                _Splitter(
+                                  onDrag: (dx) => setState(() {
+                                    _listWidth = (width + dx).clamp(
+                                      _minList,
+                                      _maxList,
+                                    );
+                                  }),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      RenameBar(focusNode: _nameFocus),
+                                      Divider(
+                                        height: 1,
+                                        color: theme.colorScheme.outline,
+                                      ),
+                                      const Expanded(child: PreviewPanel()),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
+                          Divider(height: 1, color: theme.colorScheme.outline),
+                          const StatusBar(),
                         ],
+                      );
+                    },
+                  ),
+                  if (_dragging)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: Container(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.12,
+                          ),
+                          alignment: Alignment.center,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainer,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: theme.colorScheme.primary,
+                                width: 2,
+                              ),
+                            ),
+                            child: const Text(
+                              S.dropFolder,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    Divider(height: 1, color: theme.colorScheme.outline),
-                    const StatusBar(),
-                  ],
-                );
-              },
+                ],
+              ),
             ),
           ),
         ),
@@ -129,6 +209,32 @@ class _Splitter extends StatelessWidget {
           child: Center(child: Container(width: 1, color: line)),
         ),
       ),
+    );
+  }
+}
+
+/// Membungkus [child] dengan DropTarget, kecuali dimatikan (widget test).
+class _DropWrapper extends ConsumerWidget {
+  const _DropWrapper({
+    required this.child,
+    required this.onEnter,
+    required this.onLeave,
+    required this.onDrop,
+  });
+
+  final Widget child;
+  final void Function(DragDetails) onEnter;
+  final VoidCallback onLeave;
+  final Future<void> Function(DropDetails) onDrop;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(dropEnabledProvider)) return child;
+    return DropTarget(
+      onEnter: onEnter,
+      onLeave: onLeave,
+      onDrop: onDrop,
+      child: child,
     );
   }
 }

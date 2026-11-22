@@ -12,7 +12,12 @@ void main() {
   late Directory tmp;
   late OfficeConverter conv;
   final fixtures = p.join(Directory.current.path, 'test', 'fixtures', 'office');
-  final script = p.join(Directory.current.path, 'assets', 'scripts', 'convert.ps1');
+  final script = p.join(
+    Directory.current.path,
+    'assets',
+    'scripts',
+    'convert.ps1',
+  );
 
   setUp(() {
     tmp = Directory.systemTemp.createTempSync('rp_office_');
@@ -35,27 +40,39 @@ void main() {
     expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
   }
 
-  test('DOCX menjadi PDF valid', () => expectPdf('contoh.docx', OfficeApp.word));
-  test('XLSX menjadi PDF valid', () => expectPdf('contoh.xlsx', OfficeApp.excel));
-  test('PPTX menjadi PDF valid', () => expectPdf('contoh.pptx', OfficeApp.powerPoint));
+  test(
+    'DOCX menjadi PDF valid',
+    () => expectPdf('contoh.docx', OfficeApp.word),
+  );
+  test(
+    'XLSX menjadi PDF valid',
+    () => expectPdf('contoh.xlsx', OfficeApp.excel),
+  );
+  test(
+    'PPTX menjadi PDF valid',
+    () => expectPdf('contoh.pptx', OfficeApp.powerPoint),
+  );
 
-  test('cache dipakai pada panggilan kedua dan file asli tidak berubah', () async {
-    if (!await conv.isAvailable(OfficeApp.word)) {
-      markTestSkipped('Word tidak terpasang');
-      return;
-    }
-    final src = File(p.join(fixtures, 'contoh.docx'));
-    final before = src.statSync();
-    final a = await conv.convertToPdf(src.path);
-    final sw = Stopwatch()..start();
-    final b = await conv.convertToPdf(src.path);
-    sw.stop();
-    expect(b.pdfPath, a.pdfPath);
-    expect(sw.elapsedMilliseconds, lessThan(500));
-    final after = src.statSync();
-    expect(after.modified, before.modified);
-    expect(after.size, before.size);
-  });
+  test(
+    'cache dipakai pada panggilan kedua dan file asli tidak berubah',
+    () async {
+      if (!await conv.isAvailable(OfficeApp.word)) {
+        markTestSkipped('Word tidak terpasang');
+        return;
+      }
+      final src = File(p.join(fixtures, 'contoh.docx'));
+      final before = src.statSync();
+      final a = await conv.convertToPdf(src.path);
+      final sw = Stopwatch()..start();
+      final b = await conv.convertToPdf(src.path);
+      sw.stop();
+      expect(b.pdfPath, a.pdfPath);
+      expect(sw.elapsedMilliseconds, lessThan(500));
+      final after = src.statSync();
+      expect(after.modified, before.modified);
+      expect(after.size, before.size);
+    },
+  );
 
   test('permintaan bersamaan untuk file sama dijalankan sekali', () async {
     if (!await conv.isAvailable(OfficeApp.excel)) {
@@ -63,7 +80,10 @@ void main() {
       return;
     }
     final path = p.join(fixtures, 'contoh.xlsx');
-    final rs = await Future.wait([conv.convertToPdf(path), conv.convertToPdf(path)]);
+    final rs = await Future.wait([
+      conv.convertToPdf(path),
+      conv.convertToPdf(path),
+    ]);
     expect(rs[0].isOk && rs[1].isOk, isTrue);
     expect(rs[0].pdfPath, rs[1].pdfPath);
   });
@@ -84,7 +104,8 @@ void main() {
   });
 
   test('pengelolaan cache: ukuran, trim, hapus', () async {
-    final dir = Directory(p.join(tmp.path, 'cache'))..createSync(recursive: true);
+    final dir = Directory(p.join(tmp.path, 'cache'))
+      ..createSync(recursive: true);
     File(p.join(dir.path, 'a.pdf')).writeAsBytesSync(List.filled(1000, 1));
     File(p.join(dir.path, 'b.pdf')).writeAsBytesSync(List.filled(1000, 1));
     expect(await conv.cacheSize(), 2000);

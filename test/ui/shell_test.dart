@@ -13,28 +13,44 @@ void main() {
   setUp(() => tmp = Directory.systemTemp.createTempSync('rp_ui_'));
   tearDown(() => tmp.deleteSync(recursive: true));
 
-  Future<void> pumpApp(WidgetTester t, Size size, {Map<String, Object> prefs = const {}}) async {
+  Future<void> pumpApp(
+    WidgetTester t,
+    Size size, {
+    Map<String, Object> prefs = const {},
+  }) async {
     t.view.physicalSize = size;
     t.view.devicePixelRatio = 1.0;
     addTearDown(t.view.reset);
     final s = await testServices(tmp, prefs: prefs);
-    await t.pumpWidget(ProviderScope(
-      overrides: [servicesProvider.overrideWithValue(s)],
-      child: const RenamePeekApp(),
-    ));
+    await t.pumpWidget(
+      ProviderScope(
+        overrides: [
+          servicesProvider.overrideWithValue(s),
+          dropEnabledProvider.overrideWithValue(false),
+        ],
+        child: const RenamePeekApp(),
+      ),
+    );
     await t.pumpAndSettle();
   }
 
-  testWidgets('kerangka tampil tanpa overflow pada ukuran minimum (terang)', (t) async {
+  testWidgets('kerangka tampil tanpa overflow pada ukuran minimum (terang)', (
+    t,
+  ) async {
     await pumpApp(t, const Size(960, 600), prefs: {'themeMode': 'light'});
     expect(t.takeException(), isNull);
     expect(find.byKey(const ValueKey('listPane')), findsOneWidget);
   });
 
-  testWidgets('kerangka tampil tanpa overflow pada ukuran minimum (gelap)', (t) async {
+  testWidgets('kerangka tampil tanpa overflow pada ukuran minimum (gelap)', (
+    t,
+  ) async {
     await pumpApp(t, const Size(960, 600), prefs: {'themeMode': 'dark'});
     expect(t.takeException(), isNull);
-    expect(t.widget<MaterialApp>(find.byType(MaterialApp)).themeMode, ThemeMode.dark);
+    expect(
+      t.widget<MaterialApp>(find.byType(MaterialApp)).themeMode,
+      ThemeMode.dark,
+    );
   });
 
   testWidgets('pemisah menggeser daftar dengan batas 220-480', (t) async {

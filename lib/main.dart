@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:pdfrx/pdfrx.dart';
 import 'package:window_manager/legacy.dart';
 
 import 'app.dart';
@@ -10,6 +11,7 @@ import 'state/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await pdfrxFlutterInitialize();
   await windowManager.ensureInitialized();
   const options = WindowOptions(
     size: Size(1280, 800),

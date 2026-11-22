@@ -34,7 +34,9 @@ void main() {
 
   Future<ProviderContainer> newContainer() async {
     final s = await services();
-    final container = ProviderContainer(overrides: [servicesProvider.overrideWithValue(s)]);
+    final container = ProviderContainer(
+      overrides: [servicesProvider.overrideWithValue(s)],
+    );
     addTearDown(container.dispose);
     return container;
   }
@@ -55,7 +57,11 @@ void main() {
     make('dokumen (2).pdf');
     make('lain.pdf');
     await ctl().openFolder(work.path);
-    expect(st().view.map((f) => f.name), ['dokumen.pdf', 'dokumen (1).pdf', 'dokumen (2).pdf']);
+    expect(st().view.map((f) => f.name), [
+      'dokumen.pdf',
+      'dokumen (1).pdf',
+      'dokumen (2).pdf',
+    ]);
     expect(st().index, 0);
     ctl().setShowAll(true);
     expect(st().view.length, 4);
@@ -75,24 +81,30 @@ void main() {
     expect(st().canUndo, isTrue);
   });
 
-  test('rename file terakhir di grup: daftar jadi kosong tanpa crash', () async {
-    make('dokumen.pdf');
-    make('dokumen (1).pdf');
-    await ctl().openFolder(work.path);
-    await ctl().save('satu');
-    expect(st().view.length, 0); // sisa 1 file, bukan duplikat lagi
-    expect(st().current, isNull);
-  });
+  test(
+    'rename file terakhir di grup: daftar jadi kosong tanpa crash',
+    () async {
+      make('dokumen.pdf');
+      make('dokumen (1).pdf');
+      await ctl().openFolder(work.path);
+      await ctl().save('satu');
+      expect(st().view.length, 0); // sisa 1 file, bukan duplikat lagi
+      expect(st().current, isNull);
+    },
+  );
 
-  test('nama tidak valid mengembalikan error dan tidak mengubah file', () async {
-    make('a.pdf');
-    make('a (1).pdf');
-    await ctl().openFolder(work.path);
-    final err = await ctl().save('   ');
-    expect(err, isNotNull);
-    expect(st().status?.isError, isTrue);
-    expect(File(p.join(work.path, 'a.pdf')).existsSync(), isTrue);
-  });
+  test(
+    'nama tidak valid mengembalikan error dan tidak mengubah file',
+    () async {
+      make('a.pdf');
+      make('a (1).pdf');
+      await ctl().openFolder(work.path);
+      final err = await ctl().save('   ');
+      expect(err, isNotNull);
+      expect(st().status?.isError, isTrue);
+      expect(File(p.join(work.path, 'a.pdf')).existsSync(), isTrue);
+    },
+  );
 
   test('lewati dan kembali menjaga batas indeks', () async {
     make('a.pdf');
@@ -127,7 +139,9 @@ void main() {
     make('a (1).pdf');
     final s = await services();
     await s.settings.setLastFolder(work.path);
-    final c2 = ProviderContainer(overrides: [servicesProvider.overrideWithValue(s)]);
+    final c2 = ProviderContainer(
+      overrides: [servicesProvider.overrideWithValue(s)],
+    );
     addTearDown(c2.dispose);
     await c2.read(browserProvider.notifier).init();
     expect(c2.read(browserProvider).view.length, 2);
@@ -153,7 +167,9 @@ void main() {
       make('d.xyz');
       await ctl().openFolder(work.path);
       ctl().setShowAll(true);
-      Future<PreviewSpec> load(String n) => c.read(previewProvider(st().files.firstWhere((f) => f.name == n)).future);
+      Future<PreviewSpec> load(String n) => c.read(
+        previewProvider(st().files.firstWhere((f) => f.name == n)).future,
+      );
       expect(await load('a.pdf'), isA<PdfPreview>());
       expect(await load('b.png'), isA<ImagePreview>());
       final t = await load('c.txt') as TextPreview;
@@ -166,7 +182,8 @@ void main() {
       make('big.txt', 'a' * (textPreviewLimit + 5000));
       await ctl().openFolder(work.path);
       ctl().setShowAll(true);
-      final t = await c.read(previewProvider(st().current!).future) as TextPreview;
+      final t =
+          await c.read(previewProvider(st().current!).future) as TextPreview;
       expect(t.truncated, isTrue);
       expect(t.text.length, textPreviewLimit);
     });

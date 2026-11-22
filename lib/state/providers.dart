@@ -8,5 +8,9 @@ final servicesProvider = Provider<AppServices>(
   (ref) => throw UnimplementedError('servicesProvider belum di-override'),
 );
 
-final browserProvider =
-    NotifierProvider<BrowserController, BrowserState>(BrowserController.new);
+final browserProvider = NotifierProvider<BrowserController, BrowserState>(
+  BrowserController.new,
+);
+
+/// Drag & drop memakai plugin native; dimatikan di widget test lewat override.
+final dropEnabledProvider = Provider<bool>((ref) => true);

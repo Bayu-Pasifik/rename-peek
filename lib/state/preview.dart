@@ -53,21 +53,23 @@ Future<PreviewSpec> loadPreview(DocFile f, OfficeConverter converter) async {
       try {
         final bytes = await raf.read(textPreviewLimit);
         final truncated = f.size > textPreviewLimit;
-        return TextPreview(
-          _decode(bytes),
-          truncated: truncated,
-        );
+        return TextPreview(_decode(bytes), truncated: truncated);
       } finally {
         await raf.close();
       }
     } on FileSystemException catch (e) {
-      return InfoPreview('Tidak bisa membaca file (${e.osError?.message ?? e.message}).');
+      return InfoPreview(
+        'Tidak bisa membaca file (${e.osError?.message ?? e.message}).',
+      );
     }
   }
   if (isOfficeExt(ext)) {
     final r = await converter.convertToPdf(f.path);
     if (r.isOk) return PdfPreview(r.pdfPath!, fromOffice: true);
-    return InfoPreview(r.error ?? 'Konversi gagal.', officeMissing: r.officeMissing);
+    return InfoPreview(
+      r.error ?? 'Konversi gagal.',
+      officeMissing: r.officeMissing,
+    );
   }
   return const InfoPreview('Tipe file ini belum punya preview.');
 }
@@ -75,7 +77,8 @@ Future<PreviewSpec> loadPreview(DocFile f, OfficeConverter converter) async {
 String _decode(Uint8List bytes) => utf8.decode(bytes, allowMalformed: true);
 
 /// Preview per file; dihentikan otomatis saat tidak ditonton.
-final previewProvider =
-    FutureProvider.autoDispose.family<PreviewSpec, DocFile>((ref, file) {
-  return loadPreview(file, ref.watch(servicesProvider).converter);
-});
+final previewProvider = FutureProvider.autoDispose.family<PreviewSpec, DocFile>(
+  (ref, file) {
+    return loadPreview(file, ref.watch(servicesProvider).converter);
+  },
+);

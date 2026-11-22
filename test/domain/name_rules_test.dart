@@ -34,8 +34,10 @@ void main() {
       expect(parseName('.gitignore').ext, '');
     });
     test('Unicode dan emoji', () {
-      expect(parseName('Laporan Keuangan 📄 (2).docx').key,
-          'laporan keuangan 📄');
+      expect(
+        parseName('Laporan Keuangan 📄 (2).docx').key,
+        'laporan keuangan 📄',
+      );
     });
   });
 
@@ -69,8 +71,10 @@ void main() {
       expect(sanitizeName('console', '.pdf').isOk, isTrue);
     });
     test('Unicode dipertahankan', () {
-      expect(sanitizeName('Surat Pajak 2024 😀', '.pdf').name,
-          'Surat Pajak 2024 😀');
+      expect(
+        sanitizeName('Surat Pajak 2024 😀', '.pdf').name,
+        'Surat Pajak 2024 😀',
+      );
     });
   });
 

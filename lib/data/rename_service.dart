@@ -9,10 +9,8 @@ import 'undo_log.dart';
 /// Hasil rename: sukses dengan nama akhir, atau gagal dengan pesan.
 class RenameResult {
   const RenameResult.ok({required String this.newName, required this.oldName})
-      : error = null;
-  const RenameResult.fail(String this.error)
-      : newName = null,
-        oldName = null;
+    : error = null;
+  const RenameResult.fail(String this.error) : newName = null, oldName = null;
 
   final String? newName;
   final String? oldName;
@@ -36,11 +34,15 @@ class RenameService {
 
     final dir = p.dirname(file.path);
     if (!p.equals(dir, rootDir)) {
-      return const RenameResult.fail('File berada di luar folder yang dipilih.');
+      return const RenameResult.fail(
+        'File berada di luar folder yang dipilih.',
+      );
     }
     final source = File(file.path);
     if (!await source.exists()) {
-      return RenameResult.fail('File "${file.name}" sudah tidak ada. Muat ulang folder.');
+      return RenameResult.fail(
+        'File "${file.name}" sudah tidak ada. Muat ulang folder.',
+      );
     }
 
     final desired = '${clean.name}${file.ext}';
@@ -53,11 +55,15 @@ class RenameService {
       existing.add(p.basename(e.path));
     }
     // Ganti hanya huruf besar/kecil pada file sendiri diizinkan.
-    final others = existing.where((n) => n.toLowerCase() != file.name.toLowerCase());
+    final others = existing.where(
+      (n) => n.toLowerCase() != file.name.toLowerCase(),
+    );
     final finalName = uniqueName(others, clean.name!, file.ext);
     final target = p.join(dir, finalName);
     if (target.length > maxPathLength) {
-      return const RenameResult.fail('Nama terlalu panjang untuk path Windows.');
+      return const RenameResult.fail(
+        'Nama terlalu panjang untuk path Windows.',
+      );
     }
 
     try {
@@ -65,12 +71,14 @@ class RenameService {
     } on FileSystemException catch (e) {
       return RenameResult.fail(_explain(e));
     }
-    await log.push(RenameLogEntry(
-      dir: dir,
-      from: file.name,
-      to: finalName,
-      at: DateTime.now(),
-    ));
+    await log.push(
+      RenameLogEntry(
+        dir: dir,
+        from: file.name,
+        to: finalName,
+        at: DateTime.now(),
+      ),
+    );
     return RenameResult.ok(newName: finalName, oldName: file.name);
   }
 

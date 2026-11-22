@@ -1,12 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rename_peek/domain/doc_file.dart';
 
-DocFile f(String n) => DocFile(
-      path: 'C:\\x\\$n',
-      name: n,
-      size: 1,
-      modified: DateTime(2026),
-    );
+DocFile f(String n) =>
+    DocFile(path: 'C:\\x\\$n', name: n, size: 1, modified: DateTime(2026));
 
 void main() {
   test('mengelompokkan duplikat dan mengurutkan numerik', () {
