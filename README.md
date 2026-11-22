@@ -72,3 +72,15 @@ Berkas log: `%APPDATA%\com.renamepeek\rename_peek\rename-peek.log` (lokasinya ju
 - [PRD.md](PRD.md): kebutuhan produk
 - [STYLE.md](STYLE.md): panduan desain dan kode
 - [TASK.md](TASK.md): rencana kerja dan status
+
+## Kebijakan penandatanganan kode
+
+Rilis Windows ditandatangani dengan sertifikat gratis dari [SignPath Foundation](https://signpath.org/), dibuat lewat [SignPath.io](https://about.signpath.io/).
+
+- Binary dibangun dari kode sumber repo ini oleh GitHub Actions (`.github/workflows/release.yml`).
+- Tidak ada data pengguna yang dikirim keluar. Aplikasi bekerja sepenuhnya offline pada folder lokal.
+- Persetujuan rilis: pemilik repo ([Bayu-Pasifik](https://github.com/Bayu-Pasifik)) sebagai author, reviewer, dan approver.
+
+## Lisensi
+
+GNU GPL v3.0, lihat [LICENSE](LICENSE).
