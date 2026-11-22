@@ -50,7 +50,24 @@ function Mock() {
   );
 }
 
+function initialTheme() {
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+  } catch (e) { /* ignore */ }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
 export default function App() {
+  const [theme, setTheme] = React.useState(initialTheme);
+  React.useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+  const toggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+  };
   return (
     <div id="top">
       <header className="nav">
@@ -62,7 +79,12 @@ export default function App() {
             <a href="#harga">Harga</a>
             <a href="#faq">FAQ</a>
           </nav>
-          <a className="btn sm" href={SETUP}>Unduh</a>
+          <div className="nav-act">
+            <button type="button" className="theme-btn" onClick={toggle} aria-label="Ganti tema terang/gelap">
+              {theme === 'dark' ? 'Terang' : 'Gelap'}
+            </button>
+            <a className="btn sm" href={SETUP}>Unduh</a>
+          </div>
         </div>
       </header>
 

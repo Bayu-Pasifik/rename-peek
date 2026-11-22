@@ -10,7 +10,7 @@
   --radius: 14px;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0a141c;
     --surface: #101e29;
     --ink: #e8f4fc;
@@ -21,6 +21,20 @@
     --accent-soft: #0f2a3b;
   }
 }
+:root[data-theme="dark"] {
+  --bg: #0a141c;
+  --surface: #101e29;
+  --ink: #e8f4fc;
+  --muted: #8fa7b8;
+  --line: #1d3345;
+  --accent: #38bdf8;
+  --accent-ink: #04202f;
+  --accent-soft: #0f2a3b;
+}
+.theme-btn { background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+.theme-btn:hover { border-color: var(--ink); }
+.theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.nav-act { display: flex; gap: 10px; align-items: center; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
