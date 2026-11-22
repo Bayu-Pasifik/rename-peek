@@ -6,12 +6,12 @@ const SETUP = `${REPO}/releases/download/v1.1.0/RenamePeek-Setup-1.1.0.exe`;
 const ZIP = `${REPO}/releases/download/v1.1.0/RenamePeek-1.1.0-windows-portable.zip`;
 
 const features = [
-  ['Kelompok otomatis', 'File bernama sama seperti dokumen, dokumen (1), dokumen (2) dikelompokkan dan diurutkan secara numerik.', 'c1'],
-  ['Preview besar', 'PDF, gambar, teks, serta Word, Excel, dan PowerPoint (dikonversi lewat Microsoft Office yang terpasang).', 'c2'],
-  ['Rename aman', 'Karakter ilegal dibuang, nama bentrok diberi suffix, tidak pernah menimpa file, tidak ada operasi hapus.', 'c3'],
-  ['Undo berlapis', 'Salah ketik? Ctrl+Z. Riwayat tetap ada setelah aplikasi ditutup.', 'c3'],
-  ['Keyboard dulu', 'Seluruh alur jalan tanpa mouse. Fokus selalu kembali ke kolom nama.', 'c1'],
-  ['Terang dan gelap', 'Mengikuti tema Windows, bisa dipaksa di pengaturan.', 'c2'],
+  ['Kelompok otomatis', 'File bernama sama seperti dokumen, dokumen (1), dokumen (2) dikelompokkan dan diurutkan secara numerik.'],
+  ['Preview besar', 'PDF, gambar, teks, serta Word, Excel, dan PowerPoint (dikonversi lewat Microsoft Office yang terpasang).'],
+  ['Rename aman', 'Karakter ilegal dibuang, nama bentrok diberi suffix, tidak pernah menimpa file, tidak ada operasi hapus.'],
+  ['Undo berlapis', 'Salah ketik? Ctrl+Z. Riwayat tetap ada setelah aplikasi ditutup.'],
+  ['Keyboard dulu', 'Seluruh alur jalan tanpa mouse. Fokus selalu kembali ke kolom nama.'],
+  ['Terang dan gelap', 'Mengikuti tema Windows, bisa dipaksa di pengaturan.'],
 ];
 
 const steps = [
@@ -22,8 +22,8 @@ const steps = [
 
 function Mock() {
   return (
-    <div className="mock" aria-hidden="true">
-      <div className="mock-bar"><i /><i /><i /><span>Rename Peek</span></div>
+    <figure className="mock" aria-hidden="true">
+      <div className="mock-bar">Rename Peek — dokumen.pdf</div>
       <div className="mock-body">
         <ul>
           <li className="on">dokumen.pdf</li>
@@ -31,85 +31,88 @@ function Mock() {
           <li>dokumen (2).xlsx</li>
           <li>dokumen (3).docx</li>
         </ul>
-        <div className="mock-main">
+        <div>
           <div className="mock-input">Laporan Keuangan Q3<b>.pdf</b></div>
           <div className="mock-page"><p /><p /><p className="s" /><p /><p className="s" /></div>
         </div>
       </div>
-    </div>
+      <figcaption>Gambar 1. Daftar file di kiri, kolom nama di atas preview.</figcaption>
+    </figure>
   );
 }
 
 export default function App() {
   return (
-    <>
-      <header className="nav">
+    <div className="paper" id="top">
+      <header className="masthead">
+        <div className="meta">
+          <span>Edisi v1.1.0</span>
+          <span>Windows 10/11</span>
+          <span>Gratis</span>
+        </div>
+        <h1 className="title">The Rename Peek</h1>
         <nav>
-          <a className="brand" href="#top"><img src="/rename-peek/icon.png" alt="" width="24" height="24" />Rename Peek</a>
           <a href="#cara">Cara pakai</a>
           <a href="#fitur">Fitur</a>
           <a href="#unduh">Unduh</a>
-          <a href={REPO} target="_blank" rel="noreferrer">GitHub</a>
+          <a href={REPO} target="_blank" rel="noreferrer">Kode sumber</a>
         </nav>
       </header>
 
-      <main id="top">
-        <section className="hero">
-          <div className="wrap hero-grid">
-            <div>
-              <p className="eyebrow">Aplikasi Windows · gratis · open source</p>
-              <h1>Lihat dulu, baru beri nama.</h1>
-              <p className="lead">
-                Puluhan file bernama <code>dokumen (1)</code>, <code>dokumen (2)</code> hasil unduhan?
-                Rename Peek menampilkan isinya satu per satu. Ketik nama, tekan Enter, selesai.
-              </p>
-              <div className="cta">
-                <a className="btn primary" href={SETUP}>Unduh untuk Windows</a>
-                <a className="btn" href={REPO} target="_blank" rel="noreferrer">Lihat di GitHub</a>
-              </div>
-              <p className="note">v1.1.0 · Windows 10/11 · installer 14 MB</p>
-            </div>
-            <Mock />
-          </div>
-        </section>
+      <section className="front">
+        <article className="lead-story">
+          <p className="kicker">Aplikasi Windows · Open source</p>
+          <h2 className="headline">Lihat dulu, baru beri nama</h2>
+          <p className="deck">
+            Puluhan file hasil unduhan bernama <i>dokumen (1)</i>, <i>dokumen (2)</i> tak perlu lagi dibuka satu per satu.
+            Rename Peek menampilkan isinya. Ketik nama, tekan Enter, selesai.
+          </p>
+          <p className="cta">
+            <a className="btn" href={SETUP}>Unduh untuk Windows</a>
+            <a className="link" href={REPO} target="_blank" rel="noreferrer">Baca kode sumber →</a>
+          </p>
+        </article>
+        <Mock />
+      </section>
 
-        <section id="cara" className="band ink">
-          <div className="wrap">
-            <h2>Tiga langkah, tanpa pindah jendela</h2>
-            <div className="grid3">
-              {steps.map(([t, d], i) => (
-                <div className="tile" key={t}><span className="num">{i + 1}</span><h3>{t}</h3><p>{d}</p></div>
-              ))}
-            </div>
-          </div>
-        </section>
+      <section id="cara" className="block">
+        <h3 className="section">Cara pakai</h3>
+        <div className="cols3">
+          {steps.map(([t, d], i) => (
+            <article key={t}>
+              <span className="dropnum">{i + 1}</span>
+              <h4>{t}</h4>
+              <p>{d}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <section id="fitur" className="band">
-          <div className="wrap">
-            <h2>Dibuat untuk sesi panjang</h2>
-            <div className="grid3">
-              {features.map(([t, d, c]) => (
-                <div className={`tile ${c}`} key={t}><h3>{t}</h3><p>{d}</p></div>
-              ))}
-            </div>
-          </div>
-        </section>
+      <section id="fitur" className="block">
+        <h3 className="section">Fitur</h3>
+        <div className="cols3">
+          {features.map(([t, d]) => (
+            <article key={t}>
+              <h4>{t}</h4>
+              <p>{d}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <section id="unduh" className="band accent">
-          <div className="wrap download">
-            <h2>Siap merapikan folder unduhan?</h2>
-            <p>Pilih installer atau versi portabel yang tinggal diekstrak. Keduanya tanpa akun dan tanpa iklan.</p>
-            <div className="cta">
-              <a className="btn dark" href={SETUP}>Installer (.exe)</a>
-              <a className="btn light" href={ZIP}>Portabel (.zip)</a>
-              <a className="btn light" href={REL} target="_blank" rel="noreferrer">Semua rilis</a>
-            </div>
-            <p className="note">Installer belum ditandatangani, jadi Windows SmartScreen bisa menampilkan peringatan "publisher tidak dikenal". Pilih "More info" lalu "Run anyway".</p>
-          </div>
-        </section>
-      </main>
+      <section id="unduh" className="block notice">
+        <h3 className="section">Unduh</h3>
+        <h2 className="headline small">Siap merapikan folder unduhan?</h2>
+        <p>Pilih installer atau versi portabel yang tinggal diekstrak. Keduanya tanpa akun dan tanpa iklan.</p>
+        <p className="cta">
+          <a className="btn" href={SETUP}>Installer (.exe)</a>
+          <a className="btn alt" href={ZIP}>Portabel (.zip)</a>
+          <a className="link" href={REL} target="_blank" rel="noreferrer">Semua rilis →</a>
+        </p>
+        <p className="fine">Catatan: installer belum ditandatangani, jadi Windows SmartScreen bisa menampilkan peringatan "publisher tidak dikenal". Pilih "More info" lalu "Run anyway".</p>
+      </section>
 
-      <footer>Rename Peek · dibuat dengan Flutter · <a href={REPO} target="_blank" rel="noreferrer">Kode sumber</a></footer>
-    </>
+      <footer>The Rename Peek · dibuat dengan Flutter · <a href={REPO} target="_blank" rel="noreferrer">GitHub</a></footer>
+    </div>
   );
 }
